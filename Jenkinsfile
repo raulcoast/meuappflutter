@@ -2,20 +2,14 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_IMAGE = 'raulcoast/meuappflutter:latest'  // Nome da imagem Docker
-        DOCKER_CREDENTIALS = 'docker-hub-credentials'  // ID das credenciais do Docker Hub no Jenkins
+        DOCKER_IMAGE = 'raulcoast/meuappflutter:latest'  // Nome da imagem no Docker Hub
+        DOCKER_CREDENTIALS = 'docker-hub-credentials'  // ID das credenciais do Docker no Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git 'https://github.com/raulcoast/meuappflutter'
-            }
-        }
-
-        stage('Build Flutter APK') {
-            steps {
-                sh 'flutter build apk' // Comando para construir o app Flutter
             }
         }
 
@@ -42,7 +36,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
-                // Aqui você pode adicionar comandos para publicação
+                sh 'docker run -d -p 8080:8080 $DOCKER_IMAGE'
             }
         }
     }
